@@ -1,0 +1,4 @@
+ID | NOMBRE | DOCUMENTO | CORREO | ROL | SALARIO
+--------------------------------------------------------------------------------
+1 | pep | 2232323 | pep@gmail.com | gerente | $1.0
+2 | jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj | 231313 | jem@gmial.com | ddf | $1111.0

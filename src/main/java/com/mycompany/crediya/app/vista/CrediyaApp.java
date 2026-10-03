@@ -3,9 +3,12 @@
  */
 package com.mycompany.crediya.app.vista;
 
+import com.mycompany.crediya.app.Modelo.Persistencia.GestorArchivos;
+import com.mycompany.crediya.app.Modelo.Persistencia.PagoDAO;
 import com.mycompany.crediya.app.controlador.*;
 import com.mycompany.crediya.app.model.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,7 +30,8 @@ public class CrediyaApp {
             System.out.println("2. Gestion de Clientes");
             System.out.println("3. Gestion de Prestamos");
             System.out.println("4. Gestion de Pagos / Abonos");
-            System.out.println("5. Modulo de Reportes (Streams y Lambdas)");
+            System.out.println("5. Modulo de Reportes");
+            System.out.println("6. Exportar Datos a Archivos TXT");
             System.out.println("0. Salir del Sistema");
             System.out.println("---------------------------------------------------");
             System.out.print("Seleccione una opcion: ");
@@ -40,6 +44,7 @@ public class CrediyaApp {
                     case 3: menuPrestamos(); break;
                     case 4: menuPagos(); break;
                     case 5: menuReportes(); break;
+                    case 6: exportarArchivosTxt(); break;
                     case 0: 
                         System.out.println();
                         System.out.println("Gracias por usar el sistema CrediYa. Hasta pronto."); 
@@ -51,6 +56,39 @@ public class CrediyaApp {
                 System.out.println("Error: Debe ingresar un numero valido.");
             }
         } while (opcion != 0);
+    }
+
+    // ==========================================
+    // EXPORTAR A ARCHIVOS TXT
+    // ==========================================
+    private static void exportarArchivosTxt() {
+        System.out.println();
+        System.out.println("--- Exportando Informacion a Archivos TXT ---");
+
+        List<Empleado> empleados = empleadoCtrl.listarEmpleados();
+        List<Cliente> clientes = clienteCtrl.listarClientes();
+        List<Prestamo> prestamos = prestamoCtrl.listarPrestamos();
+
+        // Recolectar todos los pagos registrados
+        List<Pago> todosLosPagos = new ArrayList<>();
+        for (Prestamo p : prestamos) {
+            todosLosPagos.addAll(pagoCtrl.listarHistorialPagos(p.getId()));
+        }
+
+        boolean okEmp = GestorArchivos.exportarEmpleados(empleados);
+        boolean okCli = GestorArchivos.exportarClientes(clientes);
+        boolean okPre = GestorArchivos.exportarPrestamos(prestamos);
+        boolean okPag = GestorArchivos.exportarPagos(todosLosPagos);
+
+        if (okEmp && okCli && okPre && okPag) {
+            System.out.println("Archivos generados exitosamente en la carpeta de su proyecto:");
+            System.out.println("- empleados.txt (" + empleados.size() + " registros)");
+            System.out.println("- clientes.txt (" + clientes.size() + " registros)");
+            System.out.println("- prestamos.txt (" + prestamos.size() + " registros)");
+            System.out.println("- pagos.txt (" + todosLosPagos.size() + " registros)");
+        } else {
+            System.out.println("Ocurrio un problema al generar algunos archivos de texto.");
+        }
     }
 
     // ==========================================
@@ -142,9 +180,9 @@ public class CrediyaApp {
         }
     }
 
- 
+    // ==========================================
     // MODULO CLIENTES
- 
+    // ==========================================
     private static void menuClientes() {
         String op = "";
         while (!op.equals("0")) {
@@ -218,7 +256,7 @@ public class CrediyaApp {
     }
     
     // ==========================================
-    // MODULO PRESTAMOS (Fechas Manuales Directas)
+    // MODULO PRESTAMOS
     // ==========================================
     private static void menuPrestamos() {
         String op = "";
@@ -304,7 +342,6 @@ public class CrediyaApp {
                     }
                 }
 
-                // 1. FECHA DE INICIO MANUAL
                 LocalDate fechaInicio = null;
                 while (true) {
                     try {
@@ -316,7 +353,6 @@ public class CrediyaApp {
                     }
                 }
 
-                // 2. FECHA DE VENCIMIENTO MANUAL
                 LocalDate fechaVencimiento = null;
                 while (true) {
                     try {
