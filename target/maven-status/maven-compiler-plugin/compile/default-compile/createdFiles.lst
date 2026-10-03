@@ -1,9 +1,9 @@
+com\mycompany\crediya\app\vista\CrediyaApp.class
+com\mycompany\crediya\app\model\Cliente.class
 com\mycompany\crediya\app\model\EstadoPrestamo.class
 com\mycompany\crediya\app\model\Prestamo.class
 com\mycompany\crediya\app\model\Empleado.class
 com\mycompany\crediya\app\Modelo\Persistencia\ConexionBD.class
 com\mycompany\crediya\app\Modelo\Persistencia\Operaciones.class
-com\mycompany\crediya\app\vista\CrediyaApp.class
 com\mycompany\crediya\app\model\Pago.class
 com\mycompany\crediya\app\model\Persona.class
-com\mycompany\crediya\app\model\Cliente.class

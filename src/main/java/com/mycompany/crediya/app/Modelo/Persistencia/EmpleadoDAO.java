@@ -4,10 +4,95 @@
  */
 package com.mycompany.crediya.app.Modelo.Persistencia;
 
+import com.mycompany.crediya.app.model.Empleado;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Heiling
  */
 public class EmpleadoDAO {
-    
+
+    public boolean guardar(Empleado empleado) {
+      
+        String sql = "INSERT INTO empleados (nombre, documento, correo, rol, salario) VALUES (?, ?, ?, ?, ?)";
+        try {
+            Connection con = ConexionBD.MysConnection();
+            Operaciones.setConnection(con);
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, empleado.getNombre());
+            ps.setString(2, empleado.getDocumento());
+            ps.setString(3, empleado.getCorreo());
+            ps.setString(4, empleado.getRol());
+            ps.setDouble(5, empleado.getSalario());
+
+            int filasAfectadas = Operaciones.insertar_actualizar_borrar_BD(ps);
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error al guardar empleado: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public List<Empleado> listarTodos() {
+        List<Empleado> lista = new ArrayList<>();
+        String sql = "SELECT * FROM empleados";
+        try {
+            Connection con = ConexionBD.MysConnection();
+            Operaciones.setConnection(con);
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = Operaciones.consultar_BD(ps);
+
+            if (rs != null) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String nombre = rs.getString("nombre");
+                    String documento = rs.getString("documento");
+                    String correo = rs.getString("correo");
+                    String rol = rs.getString("rol");
+                    double salario = rs.getDouble("salario");
+
+                    Empleado empleado = new Empleado(id, nombre, documento, correo, rol, salario);
+                    lista.add(empleado);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al listar empleados: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    public Empleado buscarPorId(int id) {
+        String sql = "SELECT * FROM empleados WHERE id = ?";
+        try {
+            Connection con = ConexionBD.MysConnection();
+            Operaciones.setConnection(con);
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = Operaciones.consultar_BD(ps);
+
+            if (rs != null && rs.next()) {
+                String nombre = rs.getString("nombre");
+                String documento = rs.getString("documento");
+                String correo = rs.getString("correo");
+                String rol = rs.getString("rol");
+                double salario = rs.getDouble("salario");
+
+                return new Empleado(id, nombre, documento, correo, rol, salario);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al buscar empleado por ID: " + e.getMessage());
+        }
+        return null;
+    }
 }

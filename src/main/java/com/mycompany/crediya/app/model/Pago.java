@@ -58,7 +58,7 @@ public class Pago {
        @Override
     public String toString() {
         return "Pago #" + id + 
-               " | Préstamo #" + prestamoId + 
+               " | Prestamo #" + prestamoId + 
                " | Fecha: " + fechaPago + 
                " | Monto Abonado: $" + monto;
     }

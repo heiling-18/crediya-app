@@ -133,7 +133,7 @@ import java.time.LocalDate;
 
             @Override
             public String toString() {
-                return "Préstamo #" + id + 
+                return "Prestamo #" + id + 
                        " | Cliente: " + cliente.getNombre() + 
                        " | Monto: $" + monto + 
                        " | Total a Pagar: $" + montoTotal + 

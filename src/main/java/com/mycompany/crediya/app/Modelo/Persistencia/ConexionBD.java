@@ -29,9 +29,9 @@ public abstract class ConexionBD {
     private static Connection getConnection(String url, String user,String password){
         try {
             con = DriverManager.getConnection(url, user, password);
-            if(con!=null){
-                DatabaseMetaData meta = con.getMetaData();
-                System.out.println("Base de datos conectada "+ meta.getDriverName());
+                         if(con!=null){
+                // DatabaseMetaData meta = con.getMetaData();
+                // System.out.println("Base de datos conectada "+ meta.getDriverName());
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());

@@ -10,5 +10,5 @@ package com.mycompany.crediya.app.model;
  */
 public enum EstadoPrestamo {
     PENDIENTE,
-    PAGO
+    PAGADO
 }

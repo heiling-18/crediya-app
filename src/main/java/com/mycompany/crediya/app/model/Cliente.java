@@ -26,6 +26,6 @@ public class Cliente extends Persona {
 
     @Override
     public String toString() {
-        return super.toString() + " | Teléfono: " + telefono;
+        return super.toString() + " | Telefono: " + telefono;
     }
 }
