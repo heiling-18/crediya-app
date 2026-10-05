@@ -108,11 +108,6 @@ El proyecto sigue una separación de responsabilidades basada en **MVC + DAO**:
 
 A continuación se presenta el espacio reservado para la imagen del Diagrama de Clases UML:
 
-<!-- ================================================================= -->
-<!-- ESPACIO RESERVADO PARA AGREGAR TU IMAGEN DEL DIAGRAMA UML         -->
-<!-- Guarda tu imagen en la carpeta del proyecto y verifica el nombre: -->
-<!-- ================================================================= -->
-
 ![Diagrama de Clases UML](diagrama_uml.png)
 
 > *Nota: Si guardas la imagen en una subcarpeta (por ejemplo `docs/diagrama_uml.png`), actualiza la ruta anterior.*
