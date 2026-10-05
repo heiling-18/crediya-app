@@ -340,7 +340,12 @@ crediya-app/
                 │   ├── PagoControlador.java     # Lógica de abonos y actualización
                 │   └── ReporteControlador.java  # Reportes con Streams y Lambdas
                 └── vista/
-                    └── CrediyaApp.java          # Menú interactivo y validaciones de consola
+                    ├── CrediyaApp.java          # Clase principal y orquestador del menu
+                    ├── EmpleadoVista.java       # Submenu y validaciones de Empleados
+                    ├── ClienteVista.java        # Submenu y validaciones de Clientes
+                    ├── PrestamoVista.java       # Submenu y registro de Prestamos
+                    ├── PagoVista.java           # Submenu y gestion de Pagos / Abonos
+                    └── ReporteVista.java        # Submenu para consultas de Reportes
 ```
 
 ---
