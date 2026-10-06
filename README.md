@@ -108,9 +108,8 @@ El proyecto sigue una separación de responsabilidades basada en **MVC + DAO**:
 
 A continuación se presenta el espacio reservado para la imagen del Diagrama de Clases UML:
 
-![Diagrama de Clases UML](diagrama_uml.png)
+![Diagrama de Clases UML](image/diagrama-UML.jpeg)
 
-> *Nota: Si guardas la imagen en una subcarpeta (por ejemplo `docs/diagrama_uml.png`), actualiza la ruta anterior.*
 
 ### Representación Estructural (Mermaid)
 
