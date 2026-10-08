@@ -6,6 +6,8 @@ package com.mycompany.crediya.app.vista;
 import com.mycompany.crediya.app.Modelo.Persistencia.GestorArchivos;
 import com.mycompany.crediya.app.controlador.*;
 import com.mycompany.crediya.app.model.*;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,7 +15,7 @@ import java.util.Scanner;
 /**
  * Clase principal del sistema CrediYa S.A.S.
  * Orquesta la ejecucion del menu principal y delega la interaccion
- * a las vistas modulares correspondientes.
+ * a las vistas modulares correspondientes con manejo de excepciones segun su tipo.
  * 
  * @author Heiling
  */
@@ -28,7 +30,7 @@ public class CrediyaApp {
     private static PagoControlador pagoCtrl = new PagoControlador();
     private static ReporteControlador reporteCtrl = new ReporteControlador();
 
-    // Vistas modulares
+    // Vistas modulares (CRUD completo)
     private static EmpleadoVista empleadoVista = new EmpleadoVista(sc, empleadoCtrl);
     private static ClienteVista clienteVista = new ClienteVista(sc, clienteCtrl);
     private static PrestamoVista prestamoVista = new PrestamoVista(sc, prestamoCtrl, clienteCtrl, empleadoCtrl);
@@ -40,10 +42,10 @@ public class CrediyaApp {
         do {
             System.out.println();
             System.out.println("       Sistema De Creditos - Crediya S.A.S.       ");
-            System.out.println("1. Gestion de Empleados");
-            System.out.println("2. Gestion de Clientes");
-            System.out.println("3. Gestion de Prestamos");
-            System.out.println("4. Gestion de Pagos / Abonos");
+            System.out.println("1. Gestion de Empleados (CRUD)");
+            System.out.println("2. Gestion de Clientes (CRUD)");
+            System.out.println("3. Gestion de Prestamos (CRUD)");
+            System.out.println("4. Gestion de Pagos / Abonos (CRUD)");
             System.out.println("5. Modulo de Reportes");
             System.out.println("6. Exportar Datos a Archivos TXT");
             System.out.println("0. Salir del Sistema");
@@ -76,10 +78,16 @@ public class CrediyaApp {
                         System.out.println("Gracias por usar el sistema CrediYa. Hasta pronto.");
                         break;
                     default:
-                        System.out.println("Opcion invalida. Intente de nuevo.");
+                        System.out.println("Opcion invalida. Ingrese un numero del 0 al 6.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Error: Debe ingresar un numero valido.");
+                System.out.println("Error de formato numerico: Debe ingresar un numero entero valido.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error de validacion: " + e.getMessage());
+            } catch (IllegalStateException e) {
+                System.out.println("Error de operacion: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error inesperado en el menu principal: " + e.getMessage());
             }
         } while (opcion != 0);
     }
@@ -91,29 +99,32 @@ public class CrediyaApp {
         System.out.println();
         System.out.println("--- Exportando Informacion a Archivos TXT ---");
 
-        List<Empleado> empleados = empleadoCtrl.listarEmpleados();
-        List<Cliente> clientes = clienteCtrl.listarClientes();
-        List<Prestamo> prestamos = prestamoCtrl.listarPrestamos();
+        try {
+            List<Empleado> empleados = empleadoCtrl.listarEmpleados();
+            List<Cliente> clientes = clienteCtrl.listarClientes();
+            List<Prestamo> prestamos = prestamoCtrl.listarPrestamos();
 
-        // Recolectar todos los pagos registrados
-        List<Pago> todosLosPagos = new ArrayList<>();
-        for (Prestamo p : prestamos) {
-            todosLosPagos.addAll(pagoCtrl.listarHistorialPagos(p.getId()));
-        }
+            List<Pago> todosLosPagos = new ArrayList<>();
+            for (Prestamo p : prestamos) {
+                todosLosPagos.addAll(pagoCtrl.listarHistorialPagos(p.getId()));
+            }
 
-        boolean okEmp = GestorArchivos.exportarEmpleados(empleados);
-        boolean okCli = GestorArchivos.exportarClientes(clientes);
-        boolean okPre = GestorArchivos.exportarPrestamos(prestamos);
-        boolean okPag = GestorArchivos.exportarPagos(todosLosPagos);
+            boolean okEmp = GestorArchivos.exportarEmpleados(empleados);
+            boolean okCli = GestorArchivos.exportarClientes(clientes);
+            boolean okPre = GestorArchivos.exportarPrestamos(prestamos);
+            boolean okPag = GestorArchivos.exportarPagos(todosLosPagos);
 
-        if (okEmp && okCli && okPre && okPag) {
-            System.out.println("Archivos generados exitosamente en la carpeta de su proyecto:");
-            System.out.println("- empleados.txt (" + empleados.size() + " registros)");
-            System.out.println("- clientes.txt (" + clientes.size() + " registros)");
-            System.out.println("- prestamos.txt (" + prestamos.size() + " registros)");
-            System.out.println("- pagos.txt (" + todosLosPagos.size() + " registros)");
-        } else {
-            System.out.println("Ocurrio un problema al generar algunos archivos de texto.");
+            if (okEmp && okCli && okPre && okPag) {
+                System.out.println("Archivos generados exitosamente en la carpeta de su proyecto:");
+                System.out.println("- empleados.txt (" + empleados.size() + " registros)");
+                System.out.println("- clientes.txt (" + clientes.size() + " registros)");
+                System.out.println("- prestamos.txt (" + prestamos.size() + " registros)");
+                System.out.println("- pagos.txt (" + todosLosPagos.size() + " registros)");
+            } else {
+                System.out.println("Advertencia: No se pudieron generar todos los archivos de texto.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al exportar archivos planos: " + e.getMessage());
         }
     }
 }

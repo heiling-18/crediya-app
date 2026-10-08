@@ -12,32 +12,78 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object para la entidad Cliente.
+ * Centraliza las operaciones CRUD contra la tabla clientes en MySQL.
+ * 
+ * @author Heiling
+ */
 public class ClienteDAO {
-// 
-    public boolean guardar(Cliente cliente) {
+
+    public boolean guardar(Cliente cliente) throws SQLException {
         String sql = "INSERT INTO clientes (nombre, documento, correo, telefono) VALUES (?, ?, ?, ?)";
         try {
-            
             Connection con = ConexionBD.MysConnection();
             Operaciones.setConnection(con);
 
-            
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, cliente.getNombre());
             ps.setString(2, cliente.getDocumento());
             ps.setString(3, cliente.getCorreo());
             ps.setString(4, cliente.getTelefono());
 
-            
             int filasAfectadas = Operaciones.insertar_actualizar_borrar_BD(ps);
             return filasAfectadas > 0;
-
         } catch (SQLException e) {
-            System.out.println("Error al guardar cliente: " + e.getMessage());
-            return false;
+            if (e.getErrorCode() == 1062) {
+                throw new SQLException("El documento " + cliente.getDocumento() + " ya pertenece a otro cliente registrado.");
+            }
+            throw e;
         }
-    
     }
+
+    public boolean actualizar(Cliente cliente) throws SQLException {
+        String sql = "UPDATE clientes SET nombre = ?, documento = ?, correo = ?, telefono = ? WHERE id = ?";
+        try {
+            Connection con = ConexionBD.MysConnection();
+            Operaciones.setConnection(con);
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, cliente.getNombre());
+            ps.setString(2, cliente.getDocumento());
+            ps.setString(3, cliente.getCorreo());
+            ps.setString(4, cliente.getTelefono());
+            ps.setInt(5, cliente.getId());
+
+            int filasAfectadas = Operaciones.insertar_actualizar_borrar_BD(ps);
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1062) {
+                throw new SQLException("El documento " + cliente.getDocumento() + " ya pertenece a otro cliente.");
+            }
+            throw e;
+        }
+    }
+
+    public boolean eliminar(int id) throws SQLException {
+        String sql = "DELETE FROM clientes WHERE id = ?";
+        try {
+            Connection con = ConexionBD.MysConnection();
+            Operaciones.setConnection(con);
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            int filasAfectadas = Operaciones.insertar_actualizar_borrar_BD(ps);
+            return filasAfectadas > 0;
+        } catch (SQLException e) {
+            if (e.getErrorCode() == 1451) {
+                throw new SQLException("No se puede eliminar el cliente porque tiene prestamos asociados.");
+            }
+            throw e;
+        }
+    }
+
     public List<Cliente> listarTodos() {
         List<Cliente> lista = new ArrayList<>();
         String sql = "SELECT * FROM clientes";
@@ -63,9 +109,10 @@ public class ClienteDAO {
         } catch (SQLException e) {
             System.out.println("Error al listar clientes: " + e.getMessage());
         }
-        return lista;  
+        return lista;
     }
-        public Cliente buscarPorId(int id) {
+
+    public Cliente buscarPorId(int id) {
         String sql = "SELECT * FROM clientes WHERE id = ?";
         try {
             Connection con = ConexionBD.MysConnection();
@@ -87,6 +134,6 @@ public class ClienteDAO {
         } catch (SQLException e) {
             System.out.println("Error al buscar cliente por ID: " + e.getMessage());
         }
-        return null; 
+        return null;
     }
 }

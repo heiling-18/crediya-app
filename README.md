@@ -6,7 +6,7 @@
 [![Architecture](https://img.shields.io/badge/Architecture-MVC%20%2B%20DAO-blue.svg)](#arquitectura-del-sistema)
 [![Status](https://img.shields.io/badge/Status-Completado-success.svg)](#)
 
-Solución de software modular desarrollada en **Java** bajo el paradigma de **Programación Orientada a Objetos (POO)** y la arquitectura **MVC (Modelo-Vista-Controlador)** junto con el patrón **DAO (Data Access Object)**. Diseñada para sistematizar y digitalizar el ciclo operativo de créditos, amortizaciones, cobranzas y análisis financiero de la microfinanciera **CrediYa S.A.S.**
+Solución de software modular desarrollada en **Java** bajo el paradigma de **Programación Orientada a Objetos (POO)** y la arquitectura **MVC (Modelo-Vista-Controlador)** junto con los patrones de diseño **DAO (Data Access Object)** y **Singleton** (para la gestión de conexión única y reutilizable a la base de datos). Diseñada para sistematizar y digitalizar el ciclo operativo de créditos, amortizaciones, cobranzas y análisis financiero de la microfinanciera **CrediYa S.A.S.**
 
 ---
 
@@ -21,7 +21,8 @@ Solución de software modular desarrollada en **Java** bajo el paradigma de **Pr
 8. [Estructura del Proyecto](#-estructura-del-proyecto)
 9. [Requisitos del Entorno](#-requisitos-del-entorno)
 10. [Instrucciones de Instalación y Ejecución](#-instrucciones-de-instalación-y-ejecución)
-11. [Autor](#-autor)
+11. [Gestión de Errores y Jerarquía de Excepciones](#️-gestión-de-errores-y-jerarquía-de-excepciones)
+12. [Autor](#-autor)
 
 ---
 
@@ -40,11 +41,13 @@ Esta aplicación de consola interactiva y robusta automatiza:
 
 ##  Características Principales
 
+* **Operaciones CRUD Completas**: Capacidad de Crear (Create), Leer/Listar (Read), Modificar (Update) y Eliminar (Delete) en todos los módulos: Clientes, Empleados, Préstamos y Pagos/Abonos.
+* **Manejo Granular de Excepciones**: Captura jerárquica de excepciones específicas en controladores y vistas (`NumberFormatException`, `DateTimeParseException`, `IllegalArgumentException`, `IllegalStateException`, `SQLException`), informando con claridad la causa exacta de cualquier inconsistencia o restricción de base de datos.
 * **Validaciones Inmediatas en Cascada**: Validación de tipos de datos en tiempo real mediante bucles interactivos (`while(true)`); impide el avance si el formato de correo, documento numérico, salario, tasa de interés (0% - 100%) o fechas (`AAAA-MM-DD`) son incorrectos. Nunca expulsa al usuario al menú principal por un error tipográfico.
 * **Cálculo Financiero Preciso**:
   $$\text{Monto Total} = \text{Monto} \times \left(1 + \frac{\text{Interés}}{100}\right)$$
   $$\text{Valor Cuota} = \frac{\text{Monto Total}}{\text{Número de Cuotas}}$$
-* **Gestión de Abonos Inteligente**: Valida que ningún abono supere el saldo pendiente. Si el saldo llega a `$0.00`, el crédito transiciona automáticamente a estado `PAGADO`.
+* **Gestión de Abonos Inteligente**: Valida que ningún abono supere el saldo pendiente. Si el saldo llega a `$0.00`, el crédito transiciona automáticamente a estado `PAGADO`. Permite además modificar montos o anular abonos recalculando y restaurando el saldo pendiente del préstamo.
 * **Submenús de Retorno Controlado**: Cada submódulo permanece en ejecución continua hasta que el usuario digita explícitamente `0. Volver al menu principal`.
 * **Exportación Automatizada a `.txt`**: Genera reportes tabulares organizados con encabezados limpios (`empleados.txt`, `clientes.txt`, `prestamos.txt`, `pagos.txt`).
 
@@ -392,5 +395,25 @@ mvn exec:java
 ```
 
 ---
+
+## 🛡️ Gestión de Errores y Jerarquía de Excepciones
+
+El sistema implementa una arquitectura defensiva en todas sus capas (Controlador y Vista), capturando y procesando excepciones según su tipo específico:
+
+| Tipo de Excepción | Causa / Escenario | Capa de Detección | Manejo en la Vista |
+|---|---|---|---|
+| `NumberFormatException` | Entrada alfanumérica en IDs, montos, cuotas o salarios | `CrediyaApp`, Vistas | Notifica error de formato numérico y solicita el valor nuevamente |
+| `DateTimeParseException` | Formato de fecha distinto a `AAAA-MM-DD` | `PrestamoVista` | Informa la sintaxis requerida sin abortar el flujo de captura |
+| `IllegalArgumentException` | Reglas de negocio inválidas (salario <= 0, interés fuera de 0-100%, fecha fin < inicio, abono > saldo) | Controladores | Informa la regla infringida y preserva el estado previo |
+| `IllegalStateException` | Estados inconsistentes (abono a crédito pagado, entidad inexistente por ID) | Controladores | Notifica la improcedencia de la acción |
+| `SQLException` | Violaciones de integridad en MySQL (cédula `UNIQUE` duplicada [1062], restricción `FOREIGN KEY` [1451]) | Capa DAO / Controladores | Traduce el código de error SQL a un mensaje claro y comprensible |
+
+---
+
+## 👤 Autor
+
+* **Heiling Gisselle León Bernal**
+* Proyecto formativo para **CrediYa S.A.S.**
+* Ingeniería de Software / Programación Orientada a Objetos en Java
 
 
