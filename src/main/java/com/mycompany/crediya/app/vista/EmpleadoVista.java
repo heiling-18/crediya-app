@@ -30,7 +30,7 @@ public class EmpleadoVista {
         String op = "";
         while (!op.equals("0")) {
             System.out.println();
-            System.out.println("--- Gestion De Empleados (CRUD) ---");
+            System.out.println("--- Gestion De Empleados ---");
             System.out.println("1. Registrar Empleado");
             System.out.println("2. Listar Empleados");
             System.out.println("3. Editar Empleado");

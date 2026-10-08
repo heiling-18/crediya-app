@@ -42,10 +42,10 @@ public class CrediyaApp {
         do {
             System.out.println();
             System.out.println("       Sistema De Creditos - Crediya S.A.S.       ");
-            System.out.println("1. Gestion de Empleados (CRUD)");
-            System.out.println("2. Gestion de Clientes (CRUD)");
-            System.out.println("3. Gestion de Prestamos (CRUD)");
-            System.out.println("4. Gestion de Pagos / Abonos (CRUD)");
+            System.out.println("1. Gestion de Empleados");
+            System.out.println("2. Gestion de Clientes");
+            System.out.println("3. Gestion de Prestamos");
+            System.out.println("4. Gestion de Pagos / Abonos");
             System.out.println("5. Modulo de Reportes");
             System.out.println("6. Exportar Datos a Archivos TXT");
             System.out.println("0. Salir del Sistema");

@@ -30,7 +30,7 @@ public class ClienteVista {
         String op = "";
         while (!op.equals("0")) {
             System.out.println();
-            System.out.println("--- Gestion De Clientes (CRUD) ---");
+            System.out.println("--- Gestion De Clientes ---");
             System.out.println("1. Registrar Cliente");
             System.out.println("2. Listar Clientes");
             System.out.println("3. Editar Cliente");

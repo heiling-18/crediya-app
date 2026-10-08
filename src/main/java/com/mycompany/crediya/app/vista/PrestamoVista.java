@@ -40,7 +40,7 @@ public class PrestamoVista {
         String op = "";
         while (!op.equals("0")) {
             System.out.println();
-            System.out.println("--- Gestion De Prestamos (CRUD) ---");
+            System.out.println("--- Gestion De Prestamos ---");
             System.out.println("1. Crear Nuevo Prestamo");
             System.out.println("2. Listar Todos los Prestamos");
             System.out.println("3. Editar Prestamo");

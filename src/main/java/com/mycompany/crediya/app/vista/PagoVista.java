@@ -35,7 +35,7 @@ public class PagoVista {
         String op = "";
         while (!op.equals("0")) {
             System.out.println();
-            System.out.println("--- Gestion De Pagos Y Abonos (CRUD) ---");
+            System.out.println("--- Gestion De Pagos Y Abonos ---");
             System.out.println("1. Registrar Abono a Prestamo");
             System.out.println("2. Ver Historico de Pagos de un Prestamo");
             System.out.println("3. Modificar Monto de un Abono");
